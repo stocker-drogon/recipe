@@ -5,6 +5,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Meine erweitere Kochrezept-Datenbank" />
+  <!-- Kein Browser-Cache: Immer die aktuellste Version laden -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <!-- iOS Home-Screen App Einstellungen -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Meine Rezepte" />
   <title>🍴 Meine Rezepte 1.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -611,6 +619,30 @@
     function esc(s) {
       if (!s) return '';
       return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+  </script>
+
+  <!-- Auto-Update wenn App vom Home-Bildschirm geöffnet wird -->
+  <script>
+    // Nur aktiv, wenn die App als Home-Screen-Icon geöffnet wird (Standalone-Modus)
+    if (window.navigator.standalone === true) {
+      const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 Minuten
+
+      // Zeitpunkt des Ladens speichern
+      localStorage.setItem('lastAppLoad', Date.now());
+
+      // Beim Wechsel zurück in die App prüfen ob ein Reload nötig ist
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') {
+          const lastLoad = parseInt(localStorage.getItem('lastAppLoad') || '0');
+          const now = Date.now();
+          if (now - lastLoad > REFRESH_INTERVAL_MS) {
+            // Mehr als 5 Minuten vergangen → lautlos neu laden
+            localStorage.setItem('lastAppLoad', now);
+            location.reload(true);
+          }
+        }
+      });
     }
   </script>
 </body>
