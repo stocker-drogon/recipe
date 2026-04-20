@@ -253,7 +253,7 @@ class RecipeManagerApp(tk.Tk):
         
         tk.Label(form_frame, text="Hinweis: Doppelklick in Zelle zum Bearbeiten.\nRechtsklick um eine neue Zeile dazwischen einzufügen.\nEntf-Taste löscht Zeile.", fg="gray", font=("Arial", 9), justify="left").grid(row=10, column=1, sticky="w", pady=(0, 10))
         
-        tk.Label(form_frame, text="Anleitung:\n(Ein Schritt pro Zeile)").grid(row=10, column=0, sticky="ne", pady=10)
+        tk.Label(form_frame, text="Anleitung:\n(1. Schritt, - Sub-Punkt)").grid(row=10, column=0, sticky="ne", pady=10)
         self.text_inst = tk.Text(form_frame, width=50, height=10, font=("Arial", 10))
         self.text_inst.grid(row=10, column=1, sticky="w", pady=10)
 
@@ -360,9 +360,8 @@ class RecipeManagerApp(tk.Tk):
         # Parse categories
         cats = [c.strip() for c in self.entry_cat.get().split(",") if c.strip()]
         
-        # Parse instructions
+        # Anleitung als String speichern (Einrückung für Sub-Punkte bleibt erhalten)
         inst_text = self.text_inst.get("1.0", tk.END).strip()
-        inst_lines = [line.strip() for line in inst_text.split("\n") if line.strip()]
 
         image_val = self.entry_image.get().strip()
         if os.path.isfile(image_val):
@@ -394,7 +393,7 @@ class RecipeManagerApp(tk.Tk):
             "source": self.entry_source.get().strip(),
             "image": image_val,
             "ingredients": ingredients,
-            "instructions": inst_lines,
+            "instructions": inst_text,
             "notes": self.text_notes.get("1.0", tk.END).strip()
         }
 
