@@ -477,7 +477,32 @@
 
       // Sortiere alphabetisch
       allRecipes.sort((a, b) => a.name.localeCompare(b.name, 'de'));
+
+      // Suche wiederherstellen
+      try {
+        const savedName = localStorage.getItem('searchName');
+        const savedIng = localStorage.getItem('searchIng');
+        if (savedName !== null) document.getElementById('search-name').value = savedName;
+        if (savedIng !== null) document.getElementById('search-ing').value = savedIng;
+      } catch (e) {
+        console.error("Fehler beim Laden der Suche aus localStorage:", e);
+      }
+
       updateList();
+
+      // Letztes angezeigtes Rezept wiederherstellen
+      try {
+        const lastView = localStorage.getItem('lastView');
+        const lastRecipeId = localStorage.getItem('lastRecipeId');
+        if (lastView === 'detail' && lastRecipeId) {
+          const id = parseInt(lastRecipeId, 10);
+          if (id) {
+            showDetail(id);
+          }
+        }
+      } catch (e) {
+        console.error("Fehler beim Laden der Ansicht aus localStorage:", e);
+      }
     }
 
     // Call it immediately! (Since script is at the end of the body)
@@ -486,6 +511,15 @@
     function updateList() {
       const qName = document.getElementById('search-name').value.toLowerCase().trim();
       const ingInput = document.getElementById('search-ing').value.toLowerCase();
+
+      // Suchbegriffe in localStorage speichern
+      try {
+        localStorage.setItem('searchName', document.getElementById('search-name').value);
+        localStorage.setItem('searchIng', document.getElementById('search-ing').value);
+      } catch (e) {
+        console.error("Fehler beim Speichern der Suche in localStorage:", e);
+      }
+
       const ingQueries = ingInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
       const filtered = allRecipes.filter(r => {
@@ -542,6 +576,14 @@
     function showDetail(id) {
       const r = allRecipes.find(x => x.id === id);
       if (!r) return;
+
+      // Ansichtsstatus in localStorage speichern
+      try {
+        localStorage.setItem('lastView', 'detail');
+        localStorage.setItem('lastRecipeId', String(id));
+      } catch (e) {
+        console.error("Fehler beim Speichern der Ansicht in localStorage:", e);
+      }
 
       document.getElementById('view-list').classList.add('hidden');
       document.getElementById('view-detail').classList.remove('hidden');
@@ -606,6 +648,12 @@
     }
 
     function showList() {
+      // Ansichtsstatus in localStorage speichern
+      try {
+        localStorage.setItem('lastView', 'list');
+      } catch (e) {
+        console.error("Fehler beim Speichern der Ansicht in localStorage:", e);
+      }
       document.getElementById('view-detail').classList.add('hidden');
       document.getElementById('view-list').classList.remove('hidden');
     }
