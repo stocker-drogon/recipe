@@ -495,7 +495,7 @@ class RecipeManagerApp(tk.Tk):
     
         inst_data = recipe.get('instructions', [])
         if isinstance(inst_data, str):
-            inst_data = [inst_data]
+            inst_data = inst_data.split('\n')
             
         for step in inst_data:
             if step.strip():
