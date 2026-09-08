@@ -740,6 +740,34 @@
       });
     }
   </script>
+
+  <!-- Bildschirm wach halten (Screen Wake Lock API) -->
+  <script>
+    // Verhindert, dass der Bildschirm automatisch ausgeht, solange die App offen ist.
+    // Unterstützt ab iOS Safari 16.4+
+    let wakeLock = null;
+
+    async function requestWakeLock() {
+      if (!('wakeLock' in navigator)) return; // API nicht verfügbar
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+      } catch (e) {
+        // Kann fehlschlagen, wenn der Tab im Hintergrund ist – kein Problem
+        console.warn('Wake Lock konnte nicht gesetzt werden:', e);
+      }
+    }
+
+    // Wake Lock beim Start anfordern
+    requestWakeLock();
+
+    // Wenn der Benutzer zur App zurückkehrt (z.B. nach Sperren/Entsperren),
+    // muss der Wake Lock neu angefordert werden, da er beim Sperren freigegeben wird.
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    });
+  </script>
 </body>
 
 </html>
