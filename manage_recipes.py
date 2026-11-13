@@ -1,4 +1,4 @@
-import tkinter as tk
+﻿import tkinter as tk
 from tkinter import messagebox, ttk
 import json
 import os
@@ -117,6 +117,7 @@ class RecipeManagerApp(tk.Tk):
         self.load_data()
         self.setup_ui()
         self.refresh_listbox()
+        self.clear_form()
 
     def load_data(self):
         if not os.path.exists(HTML_FILE):
